@@ -26,7 +26,8 @@ class Api::V1::ApikeyController < ApplicationController
         if @api.save
             json_response "api key", true, { result: @api }, 200
         else
-            json_response "Error al crear api_key o correo ya ha sido registrado", false, {}, 422
+          respuesta =  @api.errors.full_messages
+          json_response respuesta, false, {}, 422
         end
     end
 
