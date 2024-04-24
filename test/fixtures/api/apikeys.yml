@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  api_key_value: MyString
+  email: MyString
+  expires_at: 2024-04-24 03:37:22
+
+two:
+  name: MyString
+  api_key_value: MyString
+  email: MyString
+  expires_at: 2024-04-24 03:37:22

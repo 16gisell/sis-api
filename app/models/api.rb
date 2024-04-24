@@ -1,5 +1,5 @@
-module Api::V1
+module Api
   def self.table_name_prefix
-    "api_v1_"
+    "api_"
   end
 end
