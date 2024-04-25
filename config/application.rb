@@ -34,5 +34,6 @@ module SiscotelApi
         ENV[key.to_s] = value
       end if File.exists?(env_file)
     end 
+    config.date_format = "%d/%m/%Y"
   end
 end

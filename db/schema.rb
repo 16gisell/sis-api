@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_24_172950) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_25_025737) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -37,4 +37,42 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_24_172950) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tipo_documentos", force: :cascade do |t|
+    t.string "nombre", default: "", null: false
+    t.string "clave"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["clave"], name: "index_tipo_documentos_on_clave", unique: true
+  end
+
+  create_table "tipo_usuarios", force: :cascade do |t|
+    t.string "nombre", default: "", null: false
+    t.string "clave"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["clave"], name: "index_tipo_usuarios_on_clave", unique: true
+  end
+
+  create_table "usuarios", force: :cascade do |t|
+    t.string "nombre", default: "", null: false
+    t.string "razon_social", default: "", null: false
+    t.string "correo", default: "", null: false
+    t.string "telefono_principal", default: "", null: false
+    t.string "telefono_secundario", default: "", null: false
+    t.string "numero_documento", null: false
+    t.date "fecha_emicion_doc", null: false
+    t.date "fecha_vencimiento_doc", null: false
+    t.integer "tipo_usuario_id", null: false
+    t.integer "tipo_documento_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["correo"], name: "index_usuarios_on_correo", unique: true
+    t.index ["numero_documento"], name: "index_usuarios_on_numero_documento", unique: true
+    t.index ["telefono_principal"], name: "index_usuarios_on_telefono_principal", unique: true
+    t.index ["tipo_documento_id"], name: "index_usuarios_on_tipo_documento_id"
+    t.index ["tipo_usuario_id"], name: "index_usuarios_on_tipo_usuario_id"
+  end
+
+  add_foreign_key "usuarios", "tipo_documentos", on_delete: :restrict
+  add_foreign_key "usuarios", "tipo_usuarios", on_delete: :restrict
 end
