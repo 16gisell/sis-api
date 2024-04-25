@@ -42,11 +42,6 @@ class Api::V1::SessionsController < Devise::SessionsController
   end
 
   def valid_token
-    @admin = Admin.find_by authentication_token: request.headers["AUTH-TOKEN"]
-    if @admin
-      return @admin
-    else
-      json_response "Token de sesion invalido", false, {}, 422
-    end
+    @token_validate = validate_authenticate_token
   end
 end

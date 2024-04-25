@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   devise_for :admins
   namespace :api do
     namespace :v1 do
+      resources :tipo_documentos
+      resources :tipo_usuarios
+      resources :usuarios
 
       post "api_key", to: "apikey#create"
       get "list_api_key", to: "apikey#index"

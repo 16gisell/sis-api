@@ -30,4 +30,5 @@ class Api::Apikey < ApplicationRecord
       errors.add(:menssage, "El correo electrónico debe ser perteneciente a siscotel")
     end
   end
+  
 end
