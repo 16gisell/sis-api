@@ -18,7 +18,7 @@ class Admin < ApplicationRecord
   def validate_email
     email = self.email
     unless email =~ /\A([^@\s]+)@siscotelcloud\.com\z/
-      errors.add(:menssage, "El correo electrónico debe ser perteneciente a siscotel")
+      errors.add(menssage: "El correo electrónico debe ser perteneciente a siscotel")
     end
   end
 end

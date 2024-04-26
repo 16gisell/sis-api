@@ -8,6 +8,7 @@ class Api::V1::SessionsController < Devise::SessionsController
 
   #inicio de sesion
   def create
+    puts ap sign_in_params[:password]
     if @admin.valid_password?(sign_in_params[:password])
       sign_in "admin", @admin
       json_response "Sesion iniciada con exito", true, {admin: @admin}, 200

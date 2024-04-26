@@ -7,3 +7,14 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+TipoDocumento.create(nombre: "RIF", clave: "RIF")
+TipoDocumento.create(nombre: "Cedula de identidad", clave: "CI")
+TipoDocumento.create(nombre: "Pasaporte", clave: "PASS")
+
+TipoUsuario.create(nombre: "Natural", clave:"N")
+TipoUsuario.create(nombre: "Juridico", clave:"J")
+
+Admin.create(email: "admin@siscotelcloud.com", password:"123456789G")
+
+Api::Apikey.create(email: "admin@siscotelcloud.com", name: "admin")

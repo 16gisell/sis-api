@@ -46,7 +46,13 @@ class Api::V1::UsuariosController < ApplicationController
 
   
   def destroy
-    @api_v1_usuario.destroy!
+    # @api_v1_usuario.destroy!
+    if  @api_v1_usuario.destroy!
+      json_response "Usuario Eliminado correctamente", true, {}, 200
+    else
+      respuesta =  @api_v1_usuario.errors.full_messages
+      json_response respuesta, false, {}, 422
+    end
   end
 
   private
