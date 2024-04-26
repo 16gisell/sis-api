@@ -8,10 +8,10 @@ module ValidateApikeyHelper
                 @key_validate = true
                 return @key_validate
             else
-                render json: { error: 'API key ha caducado' }, status: :unauthorized
+                json_response 'API key ha caducado', false, {}, 404
             end            
         else
-            render json: { error: 'API key inválida' }, status: :unauthorized
+            json_response 'API key inválida', false, {}, 401
         end
     end
 

@@ -6,7 +6,7 @@ class Usuario < ApplicationRecord
     validates :razon_social, presence: true
     validates :correo, presence: true, uniqueness: true, format: { with: /\A[^@\s]+@[^@\s]+\.[^@\s]+\z/ , message: "Debe incluir un correo valido" } 
     validates :telefono_principal, presence: true, uniqueness: true, format: { with: /\A0\d+\z/ , message: "Numero telefonico debe iniciar en 0"} 
-    validates :telefono_secundario, presence: true, format: { with: /\A0\d+\z/ , message: "Numero telefonico debe iniciar en 0"}
+    validates :telefono_secundario, format: { with: /\A0\d+\z/ , message: "Numero telefonico debe iniciar en 0"}
     validates :fecha_emicion_doc, presence: true #format: {with: /\A(\d{1,2})\/(\d{1,2})\/(\d{4})\z/ , message:"El formato de fecha no coincide con DD/MM/AAAA"}
     validates :fecha_vencimiento_doc, presence: true
     validates :numero_documento, presence:true, uniqueness: true

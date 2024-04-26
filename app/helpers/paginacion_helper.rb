@@ -27,7 +27,7 @@ module PaginacionHelper
     
     if filter.present? && !filter.blank? 
         # Si envia datos en el parametro filter
-        consulta = Usuario.where("lower(numero_documento) LIKE ? OR lower(tipo_usuario_id) LIKE ? OR lower(tipo_documento_id)", "%#{filter.downcase}%", "%#{filter.downcase}%", "%#{filter.downcase}%").order("id ASC")
+        consulta = Usuario.where("lower(numero_documento) LIKE ?", "%#{filter.downcase}%").order("id ASC")
     else
         # No envia datos en el parametro filter
         consulta = Usuario.all.order("id ASC")

@@ -10,21 +10,21 @@ module ValidateNumDocHelper
         case tipo_documento[:clave]
         when "RIF"
             numero_documento = documento
-            unless numero_documento =~ /\AJ[0-9]{8}\d$\z|\AV[0-9]{8}\d$\z|\AE[0-9]{8}\d$\z|\AP[0-9]{8}\d$\z|\AG[0-9]{8}\d$\z/
+            unless numero_documento =~ /^(J|P|G)-\d{8}-\d{1}$/
                 return {accion: false, menssage:"Error el numero de documento no pertenece a un numero de rif valido"}
             else
                 return {accion: true, menssage:""}
             end
         when "CI"
             ci_documento = documento.to_s.strip
-            unless ci_documento =~/\AV[0-8]{7}\d$\z|\AE[0-8]{7}\d$\z/
+            unless ci_documento =~/^([VE]){1}(\d{7,8})$/
                 return {accion: false, menssage:"Error el numero de documento no pertenece a un numero de Cedula valido"}
             else
                 return {accion: true, menssage:""}
             end
         when "PS"
             pasaporte_number = documento.to_s.strip
-            unless pasaporte_number =~/\A[A-Z]{2}\d{6}[A-Z]{2}\z/
+            unless pasaporte_number =~/^[A-Z]{2,4}\d{7,9}$/
                 return {accion: false, menssage:"Error el numero de documento no pertenece a un numero de pasaporte valido"}
             else
                 return {accion: true, menssage:""}
