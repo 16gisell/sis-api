@@ -6,12 +6,16 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
   #registramos administrador
   def create
     if @key_validate = true
-      admin = Admin.new(admin_params)
-      if admin.save
-        json_response "Usuario registrado correctamente", true, { admin: admin }, 200
-      else
-        respuesta =  admin.errors.full_messages
-        json_response respuesta, false, {}, 422
+      begin
+        admin = Admin.new(admin_params)
+        if admin.save
+          build_success_create "Usuario registrado correctamente"
+        else
+          respuesta =  admin.errors.full_messages
+          build_error respuesta
+        end
+      rescue
+        build_error "Error de consulta crear admin compruebe la solicitud"    
       end
     end
   end
@@ -19,13 +23,17 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
   #metodo para resetear password
   def create_password_reset_token
     if @key_validate = true
-      admin = Admin.find_by_email(params[:email])
-      if admin
-        admin.send_reset_password_instructions
-        json_response "Nuevo password enviado al correo", true, { admin: admin }, 200
-      else
-        respuesta =  admin.errors.full_messages
-        json_response respuesta, false, {}, 422
+      begin
+        admin = Admin.find_by_email(params[:email])
+        if admin
+          admin.send_reset_password_instructions
+          build_success "Nuevo password enviado al correo", { result: admin }
+        else
+          respuesta =  admin.errors.full_messages
+          build_error respuesta
+        end
+      rescue
+        build_error "Error de consulta rest-token compruebe la solicitud"    
       end
     end
   end
@@ -33,15 +41,19 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
   #actualizamos password
   def update_password
     admin = Admin.with_reset_password_token(params[:reset_password_token])
-    if admin
-      if admin.update(password: params[:password], password_confirmation: params[:password_confirmation])
-        json_response "Password actualizada correctamente", true, { admin: admin }, 200
+    begin
+      if admin
+        if admin.update(password: params[:password], password_confirmation: params[:password_confirmation])
+          build_success_content "Password actualizada correctamente"
+        else
+          respuesta =  admin.errors.full_messages
+          build_error respuesta
+        end
       else
-        respuesta =  admin.errors.full_messages
-        json_response respuesta, false, {}, 422
+        build_error_permisso "Token invalido"
       end
-    else
-        json_response "Token invalido", false, {}, 404
+    rescue
+      build_error "Error de consulta update_password compruebe la solicitud"    
     end
   end
   
@@ -58,6 +70,6 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
   
     def ensure_params_exist
       return if params[:admin].present?
-      json_response "Parametros requeridos", false, {}, 404
+      build_error_permisso "Parametros requeridos"
     end
 end

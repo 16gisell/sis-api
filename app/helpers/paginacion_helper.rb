@@ -1,4 +1,5 @@
 module PaginacionHelper
+
   def objet_pagination(page_d, per_page_d, filter, tabla)
     page = page_d|| 1
     perPage = per_page_d|| 10
@@ -10,15 +11,22 @@ module PaginacionHelper
         # No envia datos en el parametro filter
         consulta = tabla.all.order("id ASC")
     end
+    begin
+      result = consulta.paginate(page: page, per_page: perPage)
+      #objeto de paginacion
+      objet_pagination = {}
+      objet_pagination[:current_page] = page.to_i
+      objet_pagination[:total] = consulta.length.to_i
+      objet_pagination[:per_page] = perPage.to_i
+      if !result.blank?
+          build_success "Lista #{tabla}", { result: result, pagination: objet_pagination }
+        else
+          build_success_inactive "El listado de #{tabla} es vacio", { result: result, pagination: objet_pagination }
+        end
+      rescue
+        build_error "Error de consulta compruebe la solicitud"    
+      end
 
-    result = consulta.paginate(page: page, per_page: perPage)
-    #objeto de paginacion
-    objet_pagination = {}
-    objet_pagination[:current_page] = page.to_i
-    objet_pagination[:total] = consulta.length.to_i
-    objet_pagination[:per_page] = perPage.to_i
-
-    json_response "Listado de #{tabla}", true, { result: result, pagination: objet_pagination }, 200 
   end
 
   def objet_pagination_usuario(page_d, per_page_d, filter)
@@ -32,14 +40,21 @@ module PaginacionHelper
         # No envia datos en el parametro filter
         consulta = Usuario.all.order("id ASC")
     end
+    begin
+      result = consulta.paginate(page: page, per_page: perPage)
+        #objeto de paginacion
+        objet_pagination = {}
+        objet_pagination[:current_page] = page.to_i
+        objet_pagination[:total] = consulta.length.to_i
+        objet_pagination[:per_page] = perPage.to_i
 
-    result = consulta.paginate(page: page, per_page: perPage)
-    #objeto de paginacion
-    objet_pagination = {}
-    objet_pagination[:current_page] = page.to_i
-    objet_pagination[:total] = consulta.length.to_i
-    objet_pagination[:per_page] = perPage.to_i
-
-    json_response "Lista usuarios", true, { result: result, pagination: objet_pagination }, 200 
+        if !result.blank?
+          build_success "Lista usuarios", { result: result, pagination: objet_pagination }
+        else
+          build_success_inactive "El listado de usuario es vacio", { result: result, pagination: objet_pagination }
+        end
+      rescue
+        build_error "Error de consulta usuarios compruebe la solicitud"    
+      end
   end
 end

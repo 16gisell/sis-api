@@ -8,19 +8,22 @@ class Api::V1::SessionsController < Devise::SessionsController
 
   #inicio de sesion
   def create
-    puts ap sign_in_params[:password]
-    if @admin.valid_password?(sign_in_params[:password])
-      sign_in "admin", @admin
-      json_response "Sesion iniciada con exito", true, {admin: @admin}, 200
-    else
-      json_response "No autorizado", false, {}, 401
+    begin
+      if @admin.valid_password?(sign_in_params[:password])
+        sign_in "admin", @admin
+        build_success "Sesion iniciada con exito", {result: @admin}
+      else
+        build_error_invalido "No autorizado verifique los datos"
+      end
+    rescue
+      build_error "Error de consulta acceso login compruebe la solicitud"    
     end
   end
 
   def destroy
     sign_out @admin
     @admin.generate_new_authentication_token
-    json_response "Cierre de sesion correcta", true, {}, 200
+    build_success_content "Cierre de sesion correcta"
   end
 
   private
@@ -38,7 +41,7 @@ class Api::V1::SessionsController < Devise::SessionsController
     if @admin
       return @admin
     else
-      json_response "Ususario no encontrado", false, {}, 422
+      build_error "Ususario no encontrado"
     end
   end
 

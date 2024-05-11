@@ -10,26 +10,33 @@ class Api::V1::TipoDocumentosController < ApplicationController
   end
 
   def show
-    json_response "Tipo documento", true, { result:  @api_v1_tipo_documento, pagination: [] }, 200 
+    build_success "Tipo documento", { result:  @api_v1_tipo_documento, pagination: [] }
   end
 
   def create
     @api_v1_tipo_documento = TipoDocumento.new(api_v1_tipo_documento_params)
-
-    if @api_v1_tipo_documento.save
-      json_response "Tipo documento guardado con exito", true, { result:  @api_v1_tipo_documento, pagination: [] }, 200 
-    else
-      respuesta =  @api_v1_tipo_documento.errors.full_messages
-      json_response respuesta, false, {}, 422
+    begin
+      if @api_v1_tipo_documento.save
+        build_success_create "Tipo documento guardado con exito"
+      else
+        respuesta =  @api_v1_tipo_documento.errors.full_messages
+        build_error respuesta
+      end
+    rescue
+      build_error "Error de consulta crear tipo documento compruebe la solicitud"    
     end
   end
 
   def update
-    if @api_v1_tipo_documento.update(api_v1_tipo_documento_params)
-      json_response "Tipo documento editado con exito", true, { result:  @api_v1_tipo_documento, pagination: [] }, 200 
-    else
-      respuesta =  @api_v1_tipo_documento.errors.full_messages
-      json_response respuesta, false, {}, 422
+    begin
+      if @api_v1_tipo_documento.update(api_v1_tipo_documento_params)
+        build_success_content "Tipo documento editado con exito"
+      else
+        respuesta =  @api_v1_tipo_documento.errors.full_messages
+        build_error respuesta
+      end
+    rescue
+      build_error "Error de consulta crear tipo documento compruebe la solicitud"    
     end
   end
 

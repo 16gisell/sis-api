@@ -12,7 +12,7 @@ class Api::V1::UsuariosController < ApplicationController
 
   
   def show
-    json_response "Usuario", true, { result: @api_v1_usuario, pagination: [] }, 200 
+    build_success "Usuario", { result: @api_v1_usuario, pagination: [] }
   end
 
   
@@ -20,38 +20,48 @@ class Api::V1::UsuariosController < ApplicationController
     @api_v1_usuario = Usuario.new(api_v1_usuario_params)
         #validamos el numero de documento
     validar_doc = validar_documento(@api_v1_usuario[:tipo_documento_id], @api_v1_usuario[:tipo_usuario_id], @api_v1_usuario[:numero_documento])
-      puts ap validar_doc
-      puts "aquii"
-    if validar_doc[:accion]
-      if @api_v1_usuario.save
-        json_response "Usuario registrado correctamente", true, { usuario: @api_v1_usuario }, 200
+    begin
+      if validar_doc[:accion]
+        if @api_v1_usuario.save
+          build_success_create "Usuario registrado correctamente"
+        else
+          respuesta =  @api_v1_usuario.errors.full_messages
+          build_error respuesta
+        end
       else
-        respuesta =  @api_v1_usuario.errors.full_messages
-        json_response respuesta, false, {}, 422
+        build_error validar_doc[:menssage]
       end
-    else
-      json_response validar_doc[:menssage], false, {  }, 422
+    rescue
+      build_error "Error de consulta crear usuario compruebe la solicitud"    
     end
   end
 
 
   def update
-    if @api_v1_usuario.update(api_v1_usuario_params)
-      json_response "Usuario Actualizado correctamente", true, { usuario: @api_v1_usuario }, 200
-    else
-      respuesta =  @api_v1_usuario.errors.full_messages
-      json_response respuesta, false, {}, 422
+    begin
+      if @api_v1_usuario.update(api_v1_usuario_params)
+        build_success_content "Usuario Actualizado correctamente"
+      else
+        respuesta =  @api_v1_usuario.errors.full_messages
+        build_error respuesta
+      end
+    rescue
+      build_error "Error de consulta crear usuario compruebe la solicitud"    
     end
   end
 
   
   def destroy
     # @api_v1_usuario.destroy!
-    if  @api_v1_usuario.destroy!
-      json_response "Usuario Eliminado correctamente", true, {}, 200
-    else
-      respuesta =  @api_v1_usuario.errors.full_messages
-      json_response respuesta, false, {}, 422
+    begin
+      if  @api_v1_usuario.destroy!
+        build_success_content "Usuario Eliminado correctamente"
+      else
+        respuesta =  @api_v1_usuario.errors.full_messages
+        build_error respuesta
+      end
+    rescue
+      build_error "Error de consulta crear usuario compruebe la solicitud"    
     end
   end
 

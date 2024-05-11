@@ -10,24 +10,35 @@ class Api::V1::ApikeyController < ApplicationController
             # No envia datos en el parametro filter
             consulta = Api::Apikey.all.order("id ASC")
         end
+        begin
+            result = consulta.paginate(page: page, per_page: perPage)
+            #objeto de paginacion
+            objet_pagination = {}
+            objet_pagination[:current_page] = page.to_i
+            objet_pagination[:total] = consulta.length.to_i
+            objet_pagination[:per_page] = perPage.to_i
 
-        result = consulta.paginate(page: page, per_page: perPage)
-        #objeto de paginacion
-        objet_pagination = {}
-        objet_pagination[:current_page] = page.to_i
-        objet_pagination[:total] = consulta.length.to_i
-        objet_pagination[:per_page] = perPage.to_i
-
-        json_response "Lista api_key", true, { result: result, pagination: objet_pagination }, 200 
+            if !result.blank?
+                build_success "Lista api_key", { result: result, pagination: objet_pagination }
+              else
+                build_success_inactive "El listado de Lista api_key es vacio", { result: result, pagination: objet_pagination }
+              end
+        rescue
+            build_error "Error de consulta api-key compruebe la solicitud"    
+        end
     end
 
     def create
-        @api = Api::Apikey.new(api_params)        
-        if @api.save
-            json_response "api key", true, { result: @api }, 200
-        else
-          respuesta =  @api.errors.full_messages
-          json_response respuesta, false, {}, 422
+        @api = Api::Apikey.new(api_params)      
+        begin  
+            if @api.save
+                build_success_create "api-key creada exitosamente"
+            else
+                respuesta =  @api.errors.full_messages
+                build_error respuesta
+            end
+        rescue
+            build_error "Error de consulta crear api-key compruebe la solicitud"    
         end
     end
 

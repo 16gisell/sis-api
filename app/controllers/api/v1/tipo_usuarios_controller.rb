@@ -12,26 +12,34 @@ class Api::V1::TipoUsuariosController < ApplicationController
 
 
   def show
-    json_response "Tipo personas", true, { result:  @api_v1_tipo_usuario, pagination: [] }, 200 
+    build_success "Tipo personas", { result:  @api_v1_tipo_usuario, pagination: [] }
   end
 
 
   def create
     @api_v1_tipo_usuario = TipoUsuario.new(api_v1_tipo_usuario_params)
-    if @api_v1_tipo_usuario.save
-      json_response "Tipo personas guardado con exito", true, { result:  @api_v1_tipo_usuario, pagination: [] }, 200 
-    else
-      respuesta =  @api_v1_usuario.errors.full_messages
-      json_response respuesta, false, {}, 422
+    begin
+      if @api_v1_tipo_usuario.save
+        build_success_create "Tipo personas guardado con exito"
+      else
+        respuesta =  @api_v1_usuario.errors.full_messages
+        build_error respuesta
+      end
+    rescue
+      build_error "Error de consulta crear tipo persona compruebe la solicitud"    
     end
   end
 
   def update
-    if @api_v1_tipo_usuario.update(api_v1_tipo_usuario_params)
-      json_response "Tipo personas Actualizado con exito", true, { result:  @api_v1_tipo_usuario, pagination: [] }, 200 
-    else
-      respuesta =  @api_v1_usuario.errors.full_messages
-      json_response respuesta, false, {}, 422
+    begin
+      if @api_v1_tipo_usuario.update(api_v1_tipo_usuario_params)
+        build_success_content "Tipo personas Actualizado con exito"
+      else
+        respuesta =  @api_v1_usuario.errors.full_messages
+        build_error respuesta
+      end
+    rescue
+      build_error "Error de consulta editar tipo persona compruebe la solicitud"    
     end
   end
 
